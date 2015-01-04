@@ -4,17 +4,17 @@ require 'nkf'
 
 $KCODE = 'UTF8'
 
-get "/" do 
+get "/" do
   $index ||= DATA.read
 end
 
 post "/" do
   body = params[:body]
-  
+
   f = File.open('tempfile','w')
   f.puts(NKF.nkf('-e',body))
   f.close
-  
+
   begin
     ["echo 'x' | platex #{f.path}", "dvipdfmx #{f.path}.dvi"].each{ |cmd|
       result = `#{cmd}`
